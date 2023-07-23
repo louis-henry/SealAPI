@@ -74,14 +74,6 @@ namespace SealAPI.Controllers.Files
                 return NotFound();
             }
 
-            // Convert files into images for easier display
-            if (file.Value.Type == FileType.PDF)
-            {
-                file.Value.Data = Converter.ConvertPdfToPng(file.Value.Data);
-                //file.Value.Type = FileType.PNG;
-            }
-            string base64Text = Convert.ToBase64String(file.Value.Data);
-
             // Return the file as a download response
             return File(file.Value.Data, "application/octet-stream", file.Value.Name);
         }
