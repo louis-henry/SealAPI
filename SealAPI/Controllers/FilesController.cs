@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 using SealAPI.Context;
 using SealAPI.Models;
 using SealAPI.Resources;
-using System.Text;
 
 namespace SealAPI.Controllers.Files
 {
@@ -72,6 +71,18 @@ namespace SealAPI.Controllers.Files
             if (file == null || file.Value == null || file.Value.Data == null)
             {
                 return NotFound();
+            }
+
+            // For word documents, we will convert to HTML for display
+            if (file.Value.Type == FileType.DOC || file.Value.Type == FileType.DOCX)
+            {
+                file.Value.Data = Converter.ConvertDocToPng(_logger, file.Value.Data);
+            }
+
+            // For Excel documents, we will convert to HTML for display
+            if (file.Value.Type == FileType.XLS || file.Value.Type == FileType.XLSX)
+            {
+                file.Value.Data = Converter.ConvertExcelToPng(_logger, file.Value.Data);
             }
 
             // Return the file as a download response
